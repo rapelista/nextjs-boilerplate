@@ -1,6 +1,6 @@
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
-import { login } from '~/services/auth';
+import { login, refresh } from '~/services/auth';
 import { LoginBodyType, TokenType } from '~/types/auth';
 import { decodeJWT } from './utils/jwt';
 
@@ -71,7 +71,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       /**
        * If the token is expired, refresh it.
        */
-      return token;
+      return await refresh({
+        refreshToken: token?.data?.refreshToken,
+      });
     },
     session: async ({ token, session }) => {
       /**

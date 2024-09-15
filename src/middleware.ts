@@ -6,10 +6,34 @@ import { auth } from '~/lib/auth';
  * Reference: https://nextjs.org/docs/app/building-your-application/routing/middleware
  */
 export default auth((req) => {
+  const currentPath = req.nextUrl.pathname;
+  const signInPath = '/auth/login';
+  const dashboardPath = '/dashboard';
+
   /**
-   * This is the request object. You can read the request body, headers, etc.
+   * Redirect to signInPath if user is tries to access '/'
    */
-  req;
+  if (currentPath === '/') {
+    return NextResponse.redirect(new URL(signInPath, req.url));
+  }
+
+  /**
+   * Protect all routes that start with the protectedPaths.
+   */
+  const protectedPaths = ['/dashboard'];
+
+  if (protectedPaths.some((path) => currentPath.startsWith(path))) {
+    if (!req.auth) {
+      return NextResponse.redirect(new URL(signInPath, req.url));
+    }
+  }
+
+  /**
+   * Redirect to dashboard if user is authenticated and tries to access the signInPath.
+   */
+  if (currentPath === signInPath && req.auth !== null) {
+    return NextResponse.redirect(new URL(dashboardPath, req.url));
+  }
 
   return NextResponse.next();
 });
