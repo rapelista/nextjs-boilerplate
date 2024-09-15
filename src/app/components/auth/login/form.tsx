@@ -1,8 +1,38 @@
 'use client';
 
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+
 export function LoginForm() {
+  const router = useRouter();
+
+  /**
+   * This function is called when the form is submitted and it will handle the action of the form.
+   * @param formData FormData object.
+   */
+  const handleSubmit = async (formData: FormData) => {
+    const { username, password } = Object.fromEntries(formData);
+
+    const result = await signIn('user-login', {
+      username,
+      password,
+      redirect: false,
+      callbackUrl: '/dashboard',
+    });
+
+    if (result?.url) {
+      router.push(result.url);
+    } else {
+      alert('Failed to login!');
+    }
+  };
+
   return (
     <form
+      /**
+       * Please note that we are using action instead of onSubmit.
+       */
+      action={handleSubmit}
       style={{
         display: 'grid',
         gridTemplateColumns: 'auto auto',
