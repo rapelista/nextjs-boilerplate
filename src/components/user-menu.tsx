@@ -8,10 +8,9 @@ export function UserMenu({ name }: { name?: string }) {
   };
 
   return (
-    <>
-      <div>name: {name}</div>
-      <br />
+    <div>
+      <p>{name}</p>
       <button onClick={handleLogout}>Logout</button>
-    </>
+    </div>
   );
 }

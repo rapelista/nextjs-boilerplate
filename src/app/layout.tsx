@@ -1,4 +1,11 @@
+import localFont from 'next/font/local';
 import '~/styles/globals.css';
+
+const plusJakartaSans = localFont({
+  src: '../fonts/PlusJakartaSansVF.ttf',
+  display: 'swap',
+  weight: '200 800',
+});
 
 export default function RootLayout({
   children,
@@ -7,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className={plusJakartaSans.className}>{children}</body>
     </html>
   );
 }
