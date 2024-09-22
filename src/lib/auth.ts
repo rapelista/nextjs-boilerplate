@@ -58,7 +58,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       /**
        * Subsequent calls. `user` is null when the user access the app.
-       * @todo: Check if the token is expired and refresh it.
        */
 
       const now = Math.floor(Date.now() / 1000);
@@ -104,5 +103,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   pages: {
     signIn: '/auth/login',
+  },
+  logger: {
+    error: (e) => {
+      if (process.env.NODE_ENV === 'development') {
+        const { stack: _, name, ...error } = e;
+        console.error('[auth][error]', name, { ...error });
+      }
+    },
   },
 });

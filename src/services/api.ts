@@ -72,15 +72,13 @@ export async function request(
           } else {
             await signOutServer();
           }
-
-          break;
         }
 
       /**
        * Other status codes.
        */
       default:
-        return null;
+        console.error(await res.json());
     }
   }
 }
