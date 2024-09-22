@@ -14,20 +14,12 @@ export async function login(creds: LoginBodyType) {
 export async function refresh(data: { refreshToken: string }) {
   const url = generateApiUrl('/auths/refresh');
 
-  /**
-   * The following code is the same as the one in the `request` function. But, request function include Authorization Bearer to the header. So we need to use fetch directly.
-   */
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
+  return await request(
+    url,
+    {
+      method: 'POST',
+      body: JSON.stringify(data),
     },
-    body: JSON.stringify(data),
-  });
-
-  if (!res.ok) {
-    return null;
-  }
-
-  return await res.json();
+    true
+  );
 }

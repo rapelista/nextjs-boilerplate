@@ -4,7 +4,8 @@ import { RequestMethodType } from '~/types/api';
 
 export async function request(
   url: string,
-  init?: RequestInit & { method?: RequestMethodType }
+  init?: RequestInit & { method?: RequestMethodType },
+  withoutAuth = false
 ) {
   const isClientSide = typeof window !== 'undefined';
 
@@ -30,7 +31,7 @@ export async function request(
   /**
    * If the session exists, add the access token to the headers.
    */
-  if (session) {
+  if (!withoutAuth && session) {
     headers['Authorization'] = `Bearer ${session?.data?.accessToken}`;
   }
 
@@ -75,12 +76,11 @@ export async function request(
           break;
         }
 
-        return null;
-
       /**
        * Other status codes.
        */
       default:
+        return null;
     }
   }
 }
