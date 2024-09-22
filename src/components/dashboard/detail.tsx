@@ -10,7 +10,7 @@ export function DashboardDetail({ name }: { name?: string }) {
   return (
     <>
       <div>name: {name}</div>
-      <hr />
+      <br />
       <button onClick={handleLogout}>Logout</button>
     </>
   );
