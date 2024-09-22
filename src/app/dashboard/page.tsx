@@ -6,7 +6,7 @@ export default async function Page() {
 
   return (
     <>
-      Dashboard Page
+      <h1>Dashboard Page</h1>
       {session && <DashboardDetail name={session?.user?.name ?? ''} />}
     </>
   );
