@@ -1,4 +1,4 @@
-import { generateApiUrl } from '~/lib/utils/api';
+import { generateApiUrl } from '~/lib/api';
 import { request } from '~/services/api';
 import { LoginBodyType } from '~/types/auth';
 

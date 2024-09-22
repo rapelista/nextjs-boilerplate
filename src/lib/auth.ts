@@ -2,7 +2,7 @@ import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { login, refresh } from '~/services/auth';
 import { LoginBodyType, TokenType } from '~/types/auth';
-import { decodeJWT } from './utils/jwt';
+import { decodeJWT } from './jwt';
 
 declare module '@auth/core/jwt' {
   interface JWT extends TokenType {}
