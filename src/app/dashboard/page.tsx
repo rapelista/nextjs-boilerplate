@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { DashboardDetail } from '~/components/dashboard/detail';
+import { UserMenu } from '~/components/detail';
 import { auth } from '~/lib/auth';
 
 export default async function Page() {
@@ -11,7 +11,7 @@ export default async function Page() {
     <>
       <h1>Dashboard Page</h1>
       <hr />
-      <DashboardDetail name={session?.user?.name ?? ''} />
+      <UserMenu name={session?.user?.name ?? ''} />
     </>
   );
 }

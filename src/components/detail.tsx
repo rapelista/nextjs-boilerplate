@@ -2,7 +2,7 @@
 
 import { signOut } from 'next-auth/react';
 
-export function DashboardDetail({ name }: { name?: string }) {
+export function UserMenu({ name }: { name?: string }) {
   const handleLogout = async () => {
     await signOut();
   };
