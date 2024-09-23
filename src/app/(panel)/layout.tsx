@@ -1,3 +1,4 @@
+import { Text } from '@mantine/core';
 import { redirect } from 'next/navigation';
 import { UserMenu } from '~/components/user-menu';
 import { auth } from '~/lib/auth';
@@ -15,13 +16,13 @@ export default async function Layout({
     <>
       <header
         style={{
-          padding: '0 12px',
+          padding: '6px 12px',
           display: 'flex',
           justifyContent: 'space-between',
           borderBottom: '1px solid #ccc',
         }}
       >
-        <h1>Boilerplate</h1>
+        <Text fz="h1">Boilerplate</Text>
         <UserMenu name={session?.user?.name ?? ''} />
       </header>
       <main style={{ padding: 12 }}>{children}</main>
