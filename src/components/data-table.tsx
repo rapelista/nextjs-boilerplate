@@ -5,8 +5,9 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { BaseEntityType } from '~/types/entity';
+import { DataTableActions, DataTableActionsProps } from './data-table-actions';
 
-export interface DataTableProps<TData, TValue> {
+export interface DataTableProps<TData, TValue> extends DataTableActionsProps {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   isLoading?: boolean;
@@ -16,12 +17,16 @@ export function DataTable<TData extends BaseEntityType, TValue>({
   columns,
   data,
   isLoading = true,
+  extendActions = [],
+  omitActions = [],
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     columns,
     data,
     getCoreRowModel: getCoreRowModel(),
   });
+
+  const hasActions = extendActions.length > 0 || omitActions.length < 1;
 
   return (
     <table border={1}>
@@ -38,11 +43,12 @@ export function DataTable<TData extends BaseEntityType, TValue>({
                     )}
               </th>
             ))}
-            <th>Action</th>
+            {hasActions && <th>Actions</th>}
           </tr>
         ))}
       </thead>
       <tbody>
+        {data.length === 0 && 'Kosong.'}
         {table.getCoreRowModel().rows.map((row) => (
           <tr key={row.id}>
             {row.getVisibleCells().map((cell) => (
@@ -52,10 +58,14 @@ export function DataTable<TData extends BaseEntityType, TValue>({
                   : flexRender(cell.column.columnDef.cell, cell.getContext())}
               </td>
             ))}
-            <td>
-              <button>Edit</button>
-              <button>Delete</button>
-            </td>
+            {hasActions && (
+              <td>
+                <DataTableActions
+                  extendActions={extendActions}
+                  omitActions={omitActions}
+                />
+              </td>
+            )}
           </tr>
         ))}
       </tbody>
