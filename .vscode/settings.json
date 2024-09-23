@@ -8,5 +8,16 @@
   "editor.formatOnType": false,
   "[javascript][typescript][typescriptreact][javascriptreact]": {
     "editor.maxTokenizationLineLength": 2500
-  }
+  },
+
+  /**
+   * Mantine Setup
+   */
+  "cssVariables.lookupFiles": [
+    "**/*.css",
+    "**/*.scss",
+    "**/*.sass",
+    "**/*.less",
+    "node_modules/@mantine/core/styles.css"
+  ]
 }
