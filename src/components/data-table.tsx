@@ -1,4 +1,4 @@
-import { Table } from '@mantine/core';
+import { Skeleton, Table } from '@mantine/core';
 import {
   ColumnDef,
   flexRender,
@@ -9,7 +9,8 @@ import { defaultColumnSizing } from '~/lib/table';
 import { BaseEntityType } from '~/types/entity';
 import { DataTableActions, DataTableActionsProps } from './data-table-actions';
 
-export interface DataTableProps<TData, TValue> extends DataTableActionsProps {
+export interface DataTableProps<TData, TValue>
+  extends Omit<DataTableActionsProps<TData>, 'entity'> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   isLoading?: boolean;
@@ -64,17 +65,24 @@ export function DataTable<TData extends BaseEntityType, TValue>({
           <Table.Tr key={row.id}>
             {row.getVisibleCells().map((cell) => (
               <Table.Td key={cell.id}>
-                {isLoading
-                  ? 'Loading...'
-                  : flexRender(cell.column.columnDef.cell, cell.getContext())}
+                {isLoading ? (
+                  <Skeleton my={6} h={14} maw={cell.column.getSize()} />
+                ) : (
+                  flexRender(cell.column.columnDef.cell, cell.getContext())
+                )}
               </Table.Td>
             ))}
             {hasActions && (
               <Table.Td>
-                <DataTableActions
-                  extendActions={extendActions}
-                  omitActions={omitActions}
-                />
+                {isLoading ? (
+                  <Skeleton my={8} h={14} maw={defaultColumnSizing.size} />
+                ) : (
+                  <DataTableActions
+                    extendActions={extendActions}
+                    omitActions={omitActions}
+                    entity={row.original}
+                  />
+                )}
               </Table.Td>
             )}
           </Table.Tr>

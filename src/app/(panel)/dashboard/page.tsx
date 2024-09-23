@@ -9,7 +9,6 @@ export default function Page() {
         context="units"
         columns={columns}
         extendActions={actions}
-        omitActions={['EDIT']}
       />
     </>
   );

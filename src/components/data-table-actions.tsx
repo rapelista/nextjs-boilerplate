@@ -1,55 +1,94 @@
-import React from 'react';
+import { Button, Flex } from '@mantine/core';
+import Link, { LinkProps } from 'next/link';
+import { generateParamsFromSlug } from '~/lib/table';
+import {
+  DataTableActionType,
+  DataTableDefaultActionKeyType,
+} from '~/types/data-table';
+import { BaseEntityType } from '~/types/entity';
 
-export type DataTableDefaultAction = 'DELETE' | 'EDIT';
-
-export interface DataTableActionsProps {
-  omitActions?: DataTableDefaultAction[];
-  extendActions?: (
-    | React.AnchorHTMLAttributes<HTMLAnchorElement>
-    | React.ButtonHTMLAttributes<HTMLButtonElement>
-  )[];
+export interface DataTableActionsProps<TData> {
+  omitActions?: DataTableDefaultActionKeyType[];
+  extendActions?: DataTableActionType[];
+  entity: TData;
 }
 
-export function DataTableActions({
+export function DataTableActions<TData extends BaseEntityType>({
   omitActions = [],
   extendActions = [],
-}: DataTableActionsProps) {
+  entity,
+}: DataTableActionsProps<TData>) {
   return (
-    <>
+    <Flex gap="sm">
       {/**
        * Extended Actions, can button or link.
        */}
-      {extendActions?.map((props, key) => {
-        if ('href' in props) {
-          return (
-            <a
-              key={key}
-              {...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
-            />
-          );
-        } else {
-          return (
-            <button
-              key={key}
-              {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
-            />
-          );
-        }
-      })}
+      {extendActions?.map((action, key) => (
+        <DataTableAction key={key} {...action} entity={entity} />
+      ))}
 
       {/**
        * Default Actions, remove if omitted.
        */}
       {!omitActions.includes('EDIT') && (
-        <button key={`button-default-EDIT`} onClick={() => alert('Edit')}>
-          Edit
-        </button>
+        <DataTableAction
+          key={`default-action-EDIT`}
+          label="Edit"
+          color="green"
+          entity={entity}
+          state="EDIT"
+        />
       )}
       {!omitActions.includes('DELETE') && (
-        <button key={`button-default-DELETE`} onClick={() => alert('Delete')}>
-          Delete
-        </button>
+        <DataTableAction
+          key={`default-action-DELETE`}
+          label="Delete"
+          color="red"
+          entity={entity}
+          state="DELETE"
+        />
       )}
-    </>
+    </Flex>
+  );
+}
+
+export function DataTableAction<
+  TData extends BaseEntityType,
+  THref extends LinkProps['href']
+>({
+  href,
+  label,
+  entity,
+  state,
+  ...props
+}: DataTableActionType<THref> & {
+  entity: TData;
+  state?: DataTableDefaultActionKeyType;
+}) {
+  return href ? (
+    <Link
+      href={generateParamsFromSlug(href.toString(), entity)}
+      prefetch={false}
+      passHref
+    >
+      <Button size="xs" variant="outline" {...props}>
+        {label}
+      </Button>
+    </Link>
+  ) : (
+    state && (
+      <Button
+        size="xs"
+        variant="outline"
+        {...props}
+        onClick={() => {
+          console.log(`Action: ${label}`);
+          console.log(`State: ${state}`);
+          console.log(`Entity: ${JSON.stringify(entity)}`);
+        }}
+      >
+        {label}
+      </Button>
+    )
   );
 }

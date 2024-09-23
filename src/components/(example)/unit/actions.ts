@@ -1,14 +1,10 @@
 'use client';
 
-import { DataTableActionsProps } from '~/components/data-table-actions';
+import { DataTableActionType } from '~/types/data-table';
 
-export const actions: DataTableActionsProps['extendActions'] = [
+export const actions: DataTableActionType[] = [
   {
-    onClick: () => alert('View'),
-    children: 'View',
-  },
-  {
-    href: 'unit/[id]',
-    children: 'View (link)',
+    label: 'View',
+    href: '/view/:id',
   },
 ];
