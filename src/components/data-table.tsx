@@ -1,3 +1,4 @@
+import { Table } from '@mantine/core';
 import {
   ColumnDef,
   flexRender,
@@ -24,22 +25,17 @@ export function DataTable<TData extends BaseEntityType, TValue>({
     columns,
     data,
     getCoreRowModel: getCoreRowModel(),
-    defaultColumn: {
-      size: 200,
-      minSize: 50,
-      maxSize: 250,
-    },
   });
 
   const hasActions = extendActions.length > 0 || omitActions.length < 1;
 
   return (
-    <table border={1}>
-      <thead>
+    <Table layout="fixed">
+      <Table.Thead>
         {table.getHeaderGroups().map((headerGroup) => (
-          <tr key={headerGroup.id}>
+          <Table.Tr key={headerGroup.id}>
             {headerGroup.headers.map((header) => (
-              <th
+              <Table.Th
                 key={header.id}
                 colSpan={header.colSpan}
                 style={{ width: `${header.getSize()}px` }}
@@ -50,34 +46,34 @@ export function DataTable<TData extends BaseEntityType, TValue>({
                       header.column.columnDef.header,
                       header.getContext()
                     )}
-              </th>
+              </Table.Th>
             ))}
-            {hasActions && <th>Actions</th>}
-          </tr>
+            {hasActions && <Table.Th>Actions</Table.Th>}
+          </Table.Tr>
         ))}
-      </thead>
-      <tbody>
+      </Table.Thead>
+      <Table.Tbody>
         {data.length === 0 && 'Kosong.'}
         {table.getCoreRowModel().rows.map((row) => (
-          <tr key={row.id}>
+          <Table.Tr key={row.id}>
             {row.getVisibleCells().map((cell) => (
-              <td key={cell.id}>
+              <Table.Td key={cell.id}>
                 {isLoading
                   ? 'Loading...'
                   : flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </td>
+              </Table.Td>
             ))}
             {hasActions && (
-              <td>
+              <Table.Td>
                 <DataTableActions
                   extendActions={extendActions}
                   omitActions={omitActions}
                 />
-              </td>
+              </Table.Td>
             )}
-          </tr>
+          </Table.Tr>
         ))}
-      </tbody>
-    </table>
+      </Table.Tbody>
+    </Table>
   );
 }
