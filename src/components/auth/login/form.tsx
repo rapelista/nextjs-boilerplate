@@ -1,17 +1,29 @@
 'use client';
 
+import { Button, PasswordInput, Stack, TextInput } from '@mantine/core';
+import { useForm, zodResolver } from '@mantine/form';
+import { notifications } from '@mantine/notifications';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { useToggle } from '~/hooks/use-toggle';
+import { LoginSchema } from './schema';
 
 export function LoginForm() {
   const router = useRouter();
+  const [loading, toggle] = useToggle();
 
-  /**
-   * This function is called when the form is submitted and it will handle the action of the form.
-   * @param formData FormData object.
-   */
-  const handleSubmit = async (formData: FormData) => {
-    const { username, password } = Object.fromEntries(formData);
+  const form = useForm({
+    mode: 'uncontrolled',
+    validate: zodResolver(LoginSchema),
+    initialValues: {
+      username: '',
+      password: '',
+    },
+  });
+
+  const handleSubmit = async (values: typeof form.values) => {
+    toggle();
+    const { username, password } = values;
 
     const result = await signIn('user-login', {
       username,
@@ -21,39 +33,44 @@ export function LoginForm() {
     });
 
     if (result?.url) {
+      notifications.show({
+        color: 'green',
+        title: 'Login success!',
+        message: 'Welcome to our dashboard.',
+        position: 'top-center',
+      });
+
       router.push(result.url);
     } else {
-      alert('Failed to login!');
+      notifications.show({
+        color: 'red',
+        title: 'Login failed!',
+        message: 'Please try again.',
+      });
+
+      toggle();
     }
   };
 
   return (
-    <form
-      /**
-       * Please note that we are using action instead of onSubmit.
-       */
-      action={handleSubmit}
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'auto auto',
-        gap: '8px',
-        maxWidth: '300px',
-      }}
-    >
-      <label htmlFor="username">Username</label>
-      <input id="username" name="username" type="text" required />
-      <label htmlFor="password">Password</label>
-      <input id="password" name="password" type="password" required />
-      <button
-        type="submit"
-        style={{
-          gridColumn: '1 / span 2',
-          width: '100%',
-          marginTop: '8px',
-        }}
-      >
-        Login
-      </button>
+    <form onSubmit={form.onSubmit(handleSubmit)}>
+      <Stack gap="md" miw={300}>
+        <TextInput
+          required
+          label="Username"
+          key={form.key('username')}
+          {...form.getInputProps('username')}
+        />
+        <PasswordInput
+          required
+          label="Password"
+          key={form.key('password')}
+          {...form.getInputProps('password')}
+        />
+        <Button type="submit" disabled={loading}>
+          Login
+        </Button>
+      </Stack>
     </form>
   );
 }

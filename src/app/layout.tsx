@@ -1,7 +1,9 @@
 import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
 
 import { ColorSchemeScript, MantineProvider } from '@mantine/core';
 
+import { Notifications } from '@mantine/notifications';
 import localFont from 'next/font/local';
 import { Providers } from '~/components/providers';
 import '~/styles/globals.css';
@@ -24,7 +26,10 @@ export default function RootLayout({
       </head>
       <body className={plusJakartaSans.className}>
         <Providers>
-          <MantineProvider>{children}</MantineProvider>
+          <MantineProvider>
+            <Notifications />
+            {children}
+          </MantineProvider>
         </Providers>
       </body>
     </html>
