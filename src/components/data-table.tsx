@@ -5,6 +5,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { defaultColumnSizing } from '~/lib/table';
 import { BaseEntityType } from '~/types/entity';
 import { DataTableActions, DataTableActionsProps } from './data-table-actions';
 
@@ -25,12 +26,13 @@ export function DataTable<TData extends BaseEntityType, TValue>({
     columns,
     data,
     getCoreRowModel: getCoreRowModel(),
+    defaultColumn: defaultColumnSizing,
   });
 
   const hasActions = extendActions.length > 0 || omitActions.length < 1;
 
   return (
-    <Table layout="fixed">
+    <Table layout="unset">
       <Table.Thead>
         {table.getHeaderGroups().map((headerGroup) => (
           <Table.Tr key={headerGroup.id}>
@@ -48,7 +50,11 @@ export function DataTable<TData extends BaseEntityType, TValue>({
                     )}
               </Table.Th>
             ))}
-            {hasActions && <Table.Th>Actions</Table.Th>}
+            {hasActions && (
+              <Table.Th style={{ width: `${defaultColumnSizing.maxSize}px` }}>
+                Actions
+              </Table.Th>
+            )}
           </Table.Tr>
         ))}
       </Table.Thead>
