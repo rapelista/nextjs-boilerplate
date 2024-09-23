@@ -24,6 +24,11 @@ export function DataTable<TData extends BaseEntityType, TValue>({
     columns,
     data,
     getCoreRowModel: getCoreRowModel(),
+    defaultColumn: {
+      size: 200,
+      minSize: 50,
+      maxSize: 250,
+    },
   });
 
   const hasActions = extendActions.length > 0 || omitActions.length < 1;
@@ -34,7 +39,11 @@ export function DataTable<TData extends BaseEntityType, TValue>({
         {table.getHeaderGroups().map((headerGroup) => (
           <tr key={headerGroup.id}>
             {headerGroup.headers.map((header) => (
-              <th key={header.id}>
+              <th
+                key={header.id}
+                colSpan={header.colSpan}
+                style={{ width: `${header.getSize()}px` }}
+              >
                 {header.isPlaceholder
                   ? null
                   : flexRender(
