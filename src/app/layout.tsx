@@ -27,8 +27,8 @@ export default function RootLayout({
       <body className={plusJakartaSans.className}>
         <Providers>
           <MantineProvider>
-            <Notifications />
             {children}
+            <Notifications />
           </MantineProvider>
         </Providers>
       </body>

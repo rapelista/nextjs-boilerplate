@@ -1,6 +1,7 @@
 import { Button, Flex } from '@mantine/core';
 import Link, { LinkProps } from 'next/link';
 import { generateParamsFromSlug } from '~/lib/table';
+import { useModalEntityStore } from '~/store/modal-entity';
 import {
   DataTableActionType,
   DataTableDefaultActionKeyType,
@@ -65,6 +66,8 @@ export function DataTableAction<
   entity: TData;
   state?: DataTableDefaultActionKeyType;
 }) {
+  const open = useModalEntityStore((state) => state.open);
+
   return href ? (
     <Link
       href={generateParamsFromSlug(href.toString(), entity)}
@@ -82,9 +85,11 @@ export function DataTableAction<
         variant="outline"
         {...props}
         onClick={() => {
-          console.log(`Action: ${label}`);
-          console.log(`State: ${state}`);
-          console.log(`Entity: ${JSON.stringify(entity)}`);
+          open({
+            label,
+            entity,
+            state,
+          });
         }}
       >
         {label}
